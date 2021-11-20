@@ -1,0 +1,81 @@
+﻿@page
+@model IndexModel
+@using GitHubProjectsSearch.Models.GitHubResponce;
+
+@{
+    ViewData["Title"] = "Поиск проектов на Github.";
+}
+
+<div class="row">
+
+    <div class="col-lg">
+
+        <form method="post">
+
+            <!---------------------- Заголовок ------------------------->
+            <h3 class="text-center">Поиск проектов на Github.</h3>
+            <br />
+
+            <!---------------------- Поле для ввода ------------------------->
+            @if (Model.Info != "")
+            {
+            <h6 style="color: red;" class="text-center">@Model.Info</h6>
+            }
+            <div class="row">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">Строка поиска</span>
+                    <input type="text" class="form-control" aria-describedby="basic-addon1" name="SearchString" value="@Model.SearchString">
+                </div>
+            </div>
+
+            <!---------------------- Кнопка искать ------------------------->
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="row">
+                        <button class="btn btn-dark btn-sm btn-block" type="submit">Поиск</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+        <!---------------------- Вывод результата поиска ------------------------->
+
+        @{
+            if (Model.GitHubResponceModel != null)
+            {
+                if (Model.GitHubResponceModel.Projects.Length > 0)
+                {
+                <br />
+
+                <h5 class="text-Left">В результате изменений в api github, свойство Watchers является устаревшим и используется для поддержки клиентов, которые использовали данное свойство. В настоящее время оно возвращает значение равное Stargazers.</h5>
+                <a href="https://developer.github.com/changes/2012-09-05-watcher-api/"  target="_blank"><h6 class="text-center">Подробнее</h6></a>
+                <br />
+
+                <h5 class="text-Left">Результаты поиска на запрос - @Model.SearchString</h5>
+                <br />
+
+                <div class="col p-0">
+
+                    @foreach (ProjectModel project in Model.GitHubResponceModel.Projects)
+                    {
+                                <!------ Вывод карточки с информацией о проекте ----------->
+                    <div class="card text-white bg-primary mb-3 ml-3 d-inline-block" type="submit" style="max-width: 21rem; min-width: 21rem;">
+                        <div class="card-header">@project.Name</div>
+                        <div class="card-body">
+                            <p class="card-text">Owner - @project.Owner.Login</p>
+                            <p class="card-text">Stargazers - @project.StargazersCount</p>
+                            <p class="card-text">Watchers - @project.Watchers</p>
+                            <a href="@project.HtmlUrl" target="_blank" class="btn btn-primary">Переити на репозиторий</a>
+                        </div>
+                    </div>
+                    }
+
+                </div>
+                }
+            }
+        }
+
+    </div>
+
+</div>
